@@ -1,0 +1,44 @@
+GET http://localhost:1337/api/chanteurs
+
+###
+GET http://localhost:1337/api/musiques
+
+###
+GET http://localhost:1337/api/musiques?populate=chanteur
+
+###
+PUT http://localhost:1337/api/chanteurs/3
+Content-Type: application/json
+
+{
+    "data": {
+        "Nom": "Depeche Mode",
+        "Prenom": "(DM)",
+        "DateDeNaissance": "1980-01-26",
+    }
+}
+
+###
+PUT http://localhost:1337/api/musiques/3
+Content-Type: application/json
+
+{
+  "data": {
+    "Titre": "Personal Jesus",
+    "lienYoutube": "https://youtu.be/i2GEOcEcRtY?si=xwtzmkTGyWP2YbfM",
+    "DateDeSortie": "1989-08-29",
+    "chanteur": "3",
+    "Favoris": "true",
+    "Couleur": "#571408"
+  }
+}
+
+
+###
+POST http://localhost:1337/api/auth/local
+Content-Type: application/json
+
+{
+    "identifier": "tomtom@gmail.com",
+    "password": "tomtom"
+}
