@@ -44,7 +44,7 @@ const Accueil = () => {
 
   const toggleFavori = async (id: number, currentFavori: boolean) => {
     try {
-      // Effectuer la requête PATCH pour mettre à jour Favoris
+    
       await fetch(`http://localhost:1337/api/musiques/${id}`, {
         method: "PUT",
         headers: {
@@ -52,12 +52,12 @@ const Accueil = () => {
         },
         body: JSON.stringify({
           data: {
-          Favoris: !currentFavori, // Inverser la valeur actuelle
+          Favoris: !currentFavori, 
           }
         }),
       });
 
-      // Mettre à jour l'état local
+     
       const updatedMorceaux = morceaux.map((morceau) =>
         morceau.id === id
           ? { ...morceau, attributes: { ...morceau.attributes, Favoris: !currentFavori } }
