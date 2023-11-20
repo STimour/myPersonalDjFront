@@ -11,12 +11,15 @@ interface IChanteur{
 
 }
 
+let msgErr = ""
+
 const AddM = () =>{
 const [chanteurs, setChanteurs] = useState<IChanteur[]>([])
 
 const [titre, setTitre] = useState("")
 const [lienYoutube, setLienYoutube] = useState("")
 const [chanteur, setChanteur] = useState("")
+const [favoris, setFavoris] = useState<boolean>(false)
 const [dateDeSortie, setDateDeSorie] = useState("")
 const [couleur, setCouleur] = useState("")
 
@@ -35,7 +38,8 @@ const handleChangeTitre = (e: ChangeEvent<HTMLInputElement>) => {
 
 
   const handleChangeChanteur = (e: ChangeEvent<HTMLSelectElement>) => {
-    setChanteur(e.target.value);
+    setChanteur(e.target.value)
+    
   };
 
   const handleChangeDateDeSortie = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +50,9 @@ const handleChangeTitre = (e: ChangeEvent<HTMLInputElement>) => {
     setCouleur(e.target.value);
   };
 
+  const handleChangeFavoris = (e: ChangeEvent<HTMLInputElement>) => {
+    setFavoris(e.target.checked);
+  };
 
 useEffect(()=>{
     const fetchData = async () =>{
@@ -70,6 +77,7 @@ const handleSubmit = async (e: React.FormEvent) =>{
             chanteur: chanteur,
             DateDeSortie: dateDeSortie,
             Couleur: couleur,
+            Favoris: favoris
         }
       };
     const enregistrement = await fetch("http://localhost:1337/api/musiques", {
@@ -79,6 +87,11 @@ const handleSubmit = async (e: React.FormEvent) =>{
         },
         body: JSON.stringify(formData) 
     })
+    if(enregistrement.ok){
+        navigate("/accueil")
+    }else{
+        msgErr = "L'ajout du nouveau morceau n'a pas marché"
+    }
 }
 
     return(
@@ -87,6 +100,7 @@ const handleSubmit = async (e: React.FormEvent) =>{
                 <button style={{fontSize: "1.5rem"}} onClick={() => navigate(-1)}>Revenir</button>
             </nav>
             <h1 style={{textAlign: "center"}}>Ajouter une Musique</h1>
+            <h2>{msgErr}</h2>
             <div>
                 <form style={{display: "flex", flexDirection: "column", padding: "40px"}}>
                     
@@ -96,8 +110,16 @@ const handleSubmit = async (e: React.FormEvent) =>{
                                id="Titre"
                                name="Titre"
                                onChange={handleChangeTitre}/>
-
-                    
+                        <div>
+                        <label htmlFor="Favoris">Mettre dans le favoris ?</label>
+                        <input
+                            type="checkbox"
+                            id="Favoris"
+                            name="Favoris"
+                            checked={favoris}
+                            onChange={handleChangeFavoris}
+                          />
+                        </div>
                     
                         <label htmlFor="lienYoutube">Lien Youtube</label>
                         <input style={{padding: "10px"}} 
@@ -113,6 +135,7 @@ const handleSubmit = async (e: React.FormEvent) =>{
                             name="chanteur" 
                             id="chanteur"
                             onChange={handleChangeChanteur}>
+                            <option value="">N'est pas dans la liste</option>
                             {chanteurs.map((chanteur, index) =>(
                             <option key={index} value={chanteur.id}>{chanteur.attributes.Nom} {chanteur.attributes.Prenom}
                             </option>
