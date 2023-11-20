@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-
 import './index.css'
 import Accueil from './components/Accueil.tsx';
 import AddM from './components/AddM.tsx';
@@ -24,7 +23,7 @@ const router = createBrowserRouter([
     element: <AddM />
   },
   {
-    path: "/modifierMusique",
+    path: "/modifierMusique/:id",
     element: <ModifiM />
   }
 ])

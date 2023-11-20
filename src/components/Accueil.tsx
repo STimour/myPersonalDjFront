@@ -102,7 +102,7 @@ const Accueil = () => {
             }}
           >
              <button style={{position: "absolute", left: "1px",padding: "3px" , background: "transparent"}} onClick={() => toggleFavori(item.id, item.attributes.Favoris)}><img src="./src/assets/oui.png"  /></button>
-             <Link style={{color: "white", textShadow: "1px 1px 1px black"}} to={"/modifierMusique"} key={item.id}>
+             <Link style={{color: "white", textShadow: "1px 1px 1px black"}} to={`/modifierMusique/${item.id}`}  key={item.id}>
              <div>
               <p>Titre: {item.attributes.Titre}</p>
             {item.attributes.chanteur && item.attributes.chanteur.data && (
@@ -143,7 +143,7 @@ const Accueil = () => {
                 backgroundColor: item.attributes.Couleur,
                 position: "relative"}}>
             <button style={{position: "absolute", left: "1px",padding: "3px" , background: "transparent"}} onClick={() => toggleFavori(item.id, item.attributes.Favoris)}>{item.attributes.Favoris === true ? <img src="./src/assets/oui.png"  /> : <img src="./src/assets/non.png"  />}</button>
-            <Link style={{color: "white", textShadow: "1px 1px 1px black"}} to={"/modifierMusique"} key={item.id}>
+            <Link style={{color: "white", textShadow: "1px 1px 1px black"}} to={`/modifierMusique/${item.id}`} key={item.id}>
              <div>
               <p>Titre: {item.attributes.Titre}</p>
             {item.attributes.chanteur && item.attributes.chanteur.data && (
