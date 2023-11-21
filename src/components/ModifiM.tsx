@@ -42,8 +42,8 @@ const ModifiM = () => {
   const [titre, setTitre] = useState(morceau?.attributes.Titre)
   const [lienYoutube, setLienYoutube] = useState(morceau?.attributes.lienYoutube)
   const [chanteur, setChanteur] = useState(morceau?.attributes.chanteur?.data.id)
-  const [favoris, setFavoris] = useState<boolean>(morceau?.attributes.Favoris || false);
-  const [dateDeSortie, setDateDeSorie] = useState(morceau?.attributes.DateDeSortie || '')
+  const [favoris, setFavoris] = useState<boolean>(morceau?.attributes.Favoris ?? false);
+  const [dateDeSortie, setDateDeSorie] = useState(morceau?.attributes.DateDeSortie)
   const [couleur, setCouleur] = useState(morceau?.attributes.Couleur)
 
 
@@ -126,7 +126,8 @@ const handleChangeTitre = (e: ChangeEvent<HTMLInputElement>) => {
   };
 
   const handleChangeFavoris = (e: ChangeEvent<HTMLInputElement>) => {
-    setFavoris(e.target.checked);
+    const selected = Boolean(e.target.checked)
+    setFavoris(selected);
   };
 
   const handleSubmit = async (e: React.FormEvent) =>{
@@ -135,14 +136,14 @@ const handleChangeTitre = (e: ChangeEvent<HTMLInputElement>) => {
         data: {
             Titre: titre,
             lienYoutube: lienYoutube,
-            chanteur: chanteur,
+            chanteur: {id: chanteur},
             DateDeSortie: dateDeSortie,
             Couleur: couleur,
             Favoris: favoris
         }
       };
-    const enregistrement = await fetch("http://localhost:1337/api/musiques", {
-        method: "POST",
+    const enregistrement = await fetch(`http://localhost:1337/api/musiques/${id}`, {
+        method: "PUT",
         headers: {
             "Content-Type": "application/json",    
         },
@@ -158,7 +159,7 @@ const handleChangeTitre = (e: ChangeEvent<HTMLInputElement>) => {
 
   return (
     <>
-      <h1>Modifier Les Informations</h1>
+     
       <p>ID: {morceau.id}</p>
       <p>Titre: {morceau.attributes.Titre}</p>
       <p>Chanteur : {morceau.attributes.chanteur?.data.id}</p>
@@ -170,7 +171,7 @@ const handleChangeTitre = (e: ChangeEvent<HTMLInputElement>) => {
             <nav style={{width: "90vw", margin: "auto", display: "flex", justifyContent: "flex-end"}}> 
                 <button style={{fontSize: "1.5rem"}} onClick={() => navigate(-1)}>Revenir</button>
             </nav>
-            <h1 style={{textAlign: "center"}}>Ajouter une Musique</h1>
+            <h1 style={{textAlign: "center"}}>Modifier Les Informations</h1>
             <h2>{msgErr}</h2>
             <div>
                 <form style={{display: "flex", flexDirection: "column", padding: "40px"}}>
@@ -184,20 +185,16 @@ const handleChangeTitre = (e: ChangeEvent<HTMLInputElement>) => {
                                onChange={handleChangeTitre}/>
                         
                         <label htmlFor="Favoris">Favoris ?</label>
-                        <select style={{padding: "10px"}} 
-                                name="Favoris" 
-                                id="Favoris"
-                                >
-                               <option value="" disabled>
-                                Sélectionnez une option
-                                </option>
-                                <option value="true">
-                                  {String(morceau.attributes.Favoris) === "true" ? "Oui" : "Non"}
-                                </option>
-                                <option value="false">
-                                  {String(morceau.attributes.Favoris) === "false" ? "Oui" : "Non"}
-                                </option>
-                        </select>
+                        <div>
+                        <label htmlFor="Favoris">Mettre dans le favoris ?</label>
+                        <input
+                            type="checkbox"
+                            id="Favoris"
+                            name="Favoris"
+                            checked={favoris}
+                            onChange={handleChangeFavoris}
+                          />
+                        </div>
                      
                     
                     
@@ -215,9 +212,12 @@ const handleChangeTitre = (e: ChangeEvent<HTMLInputElement>) => {
                         <select style={{padding: "10px"}} 
                             name="chanteur" 
                             id="chanteur"
-                            value={morceau.attributes.chanteur?.data.id}
+                            
                             onChange={handleChangeChanteur}
                             >
+                            <option value="" disabled>
+                                {morceau.attributes.chanteur?.data.attributes.Nom} {morceau.attributes.chanteur?.data.attributes.Prenom}
+                            </option>
                             {chanteurs.map((chanteur, index) =>(
                             <option key={index} value={chanteur.id}>{chanteur.attributes.Nom} {chanteur.attributes.Prenom}
                             </option>
@@ -240,7 +240,7 @@ const handleChangeTitre = (e: ChangeEvent<HTMLInputElement>) => {
                                value={morceau.attributes.Couleur}
                                onChange={handleChangeCouleur}/>
                     
-                    <button style={{marginTop: "20px"}} onClick={handleSubmit}>Ajouter</button>
+                    <button style={{marginTop: "20px"}} onClick={handleSubmit}>Modifier</button>
                 </form>
         
             </div>
